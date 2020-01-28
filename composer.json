@@ -1,0 +1,17 @@
+{
+	"name": "webchemistry/admin",
+	"autoload": {
+		"psr-4": {
+			"WebChemistry\\Administration\\": "src/"
+		}
+	},
+	"require": {
+		"php": ">= 7.3",
+		"nette/application": "^3.0",
+		"nette/security": "^3.0",
+		"nette/di": "^3.0",
+		"webchemistry/nette-interfaces": "dev-master",
+		"nette/forms": "^3.0",
+		"latte/latte": "^2.6"
+	}
+}

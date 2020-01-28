@@ -1,0 +1,31 @@
+{define renderChild}
+	<ul n:foreach="$items as $item" n:if="$item->isAllowed($user)" class="dropdown-menu">
+		<li class="nav-item dropdown">
+			<a href="{$presenter->link(...$item->getUrl())}">
+				<span>{$item->getName()}</span>
+				<span n:if="$item->getChildren()" class="arrow">
+				  <i class="ti-angle-right"></i>
+				</span>
+			</a>
+			<ul n:if="$item->getChildren()" class="dropdown-menu">
+				{include renderChild items => $item->getChildren()}
+			</ul>
+		</li>
+	</ul>
+{/define}
+
+<ul class="sidebar-menu scrollable pos-r">
+	<li n:foreach="$items as $item" n:if="$item->isAllowed($user)" n:class="$item->getChildren() ? 'dropdown','nav-item', $iterator->isFirst() ? 'mT-30'">
+		<a class="sidebar-link" href="{if $item->getChildren()}javascript:void(0){else}{$presenter->link(...$item->getUrl())}{/if}">
+                <span n:if="$item->getIcon()" class="icon-holder">
+                  <i n:class="$item->getColor() ?: 'c-blue-500', $item->getIcon()"></i>
+                </span>
+			<span class="title">{$item->getName()}</span>
+			<span n:if="$item->getChildren()" class="arrow">
+				<i class="ti-angle-right"></i>
+			</span>
+
+			{include renderChild items => $item->getChildren()}
+		</a>
+	</li>
+</ul>
