@@ -1,5 +1,5 @@
 {
-	"name": "webchemistry/admin",
+	"name": "webchemistry/administration",
 	"autoload": {
 		"psr-4": {
 			"WebChemistry\\Administration\\": "src/"
@@ -10,7 +10,7 @@
 		"nette/application": "^3.0",
 		"nette/security": "^3.0",
 		"nette/di": "^3.0",
-		"webchemistry/nette-interfaces": "dev-master",
+		"webchemistry/nette-interfaces": "^1.0.0",
 		"nette/forms": "^3.0",
 		"latte/latte": "^2.6"
 	}
