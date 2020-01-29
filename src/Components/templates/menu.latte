@@ -1,31 +1,29 @@
 {define renderChild}
-	<ul n:foreach="$items as $item" n:if="$item->isAllowed($user)" class="dropdown-menu">
-		<li class="nav-item dropdown">
-			<a href="{$presenter->link(...$item->getUrl())}">
-				<span>{$item->getName()}</span>
-				<span n:if="$item->getChildren()" class="arrow">
-				  <i class="ti-angle-right"></i>
-				</span>
+	<ul class="nav nav-treeview">
+		<li class="nav-item" n:foreach="$items as $item">
+			<a href="{$presenter->link(...$item->getUrl())}" class="nav-link">
+				<i class="far {$item->getIcon()} nav-icon"></i>
+				<p>{$item->getName()}</p>
 			</a>
-			<ul n:if="$item->getChildren()" class="dropdown-menu">
-				{include renderChild items => $item->getChildren()}
-			</ul>
 		</li>
 	</ul>
 {/define}
 
-<ul class="sidebar-menu scrollable pos-r">
-	<li n:foreach="$items as $item" n:if="$item->isAllowed($user)" n:class="$item->getChildren() ? 'dropdown','nav-item', $iterator->isFirst() ? 'mT-30'">
-		<a class="sidebar-link" href="{if $item->getChildren()}javascript:void(0){else}{$presenter->link(...$item->getUrl())}{/if}">
-                <span n:if="$item->getIcon()" class="icon-holder">
-                  <i n:class="$item->getColor() ?: 'c-blue-500', $item->getIcon()"></i>
-                </span>
-			<span class="title">{$item->getName()}</span>
-			<span n:if="$item->getChildren()" class="arrow">
-				<i class="ti-angle-right"></i>
-			</span>
+<nav class="mt-2">
+	<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+		<li n:foreach="$items as $item" n:class="'nav-item', $item->getChildren() ? 'has-treeview'">
+			<a href="{if $item->getChildren()}#{else}{$presenter->link(...$item->getUrl())}{/if}" class="nav-link">
+				<i class="nav-icon fa {$item->getIcon()}" n:if="$item->getIcon()"></i>
+				<p>
+					{$item->getName()}
 
-			{include renderChild items => $item->getChildren()}
-		</a>
-	</li>
-</ul>
+					<i n:if="$item->getChildren()" class="right fas fa-angle-left"></i>
+				</p>
+			</a>
+
+			{if $item->getChildren()}
+				{include renderChild items => $item->getChildren()}
+			{/if}
+		</li>
+	</ul>
+</nav>

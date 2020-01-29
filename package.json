@@ -1,6 +1,6 @@
 {
   "name": "@webchemistry/administration",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "files": [
     "assets"
@@ -10,5 +10,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "admin-lte": "^3.0.2"
+  }
 }

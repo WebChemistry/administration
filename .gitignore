@@ -7,3 +7,7 @@ template
 ## composer
 vendor
 composer.lock
+
+## npm
+node_modules
+package.lock

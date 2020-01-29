@@ -4,7 +4,9 @@ namespace WebChemistry\Administration;
 
 use Nette\Application\ForbiddenRequestException;
 use WebChemistry\Administration\Authorizator\IAdministratorAuthorizator;
+use WebChemistry\Administration\Components\MenuComponent;
 use WebChemistry\Administration\Providers\CdnLinkProvider;
+use WebChemistry\Administration\Providers\HomepageLinkProvider;
 
 trait TAdminPresenter {
 
@@ -14,16 +16,25 @@ trait TAdminPresenter {
 	/** @var CdnLinkProvider */
 	private $linkProvider;
 
+	/** @var MenuComponent */
+	private $menuComponent;
+
+	/** @var HomepageLinkProvider */
+	private $homepageLinkProvider;
+
 	final public function injectTAdminPresenter(IAdministratorAuthorizator $administratorAuthorizator,
-												CdnLinkProvider $linkProvider) {
+												CdnLinkProvider $linkProvider, MenuComponent $menuComponent,
+												HomepageLinkProvider $homepageLinkProvider) {
 		$this->administratorAuthorizator = $administratorAuthorizator;
 		$this->linkProvider = $linkProvider;
+		$this->menuComponent = $menuComponent;
+		$this->homepageLinkProvider = $homepageLinkProvider;
 	}
 
 	protected function startup() {
 		parent::startup();
 
-		if (!$this->getUser()->isLoggedn() && !$this->isLinkCurrent('Sign:*')) {
+		if (!$this->getUser()->isLoggedIn() && !$this->isLinkCurrent('Sign:*')) {
 			$this->redirect('Sign:in', ['backlink' => $this->link('this')]);
 		}
 
@@ -49,7 +60,12 @@ trait TAdminPresenter {
 		$template = $this->getTemplate();
 
 		$template->parentLayout = $this->getBaseLayout();
+		$template->homepageLink = $this->link($this->homepageLinkProvider->getLink());
 		$template->assetsPath = $this->linkProvider->getAssetsLink();
+	}
+
+	protected function createComponentMenu(): MenuComponent {
+		return $this->menuComponent;
 	}
 
 }

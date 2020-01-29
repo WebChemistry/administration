@@ -3,178 +3,95 @@
 <html>
 <head>
     <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title n:inner-block="setTitle">Administrace{ifset #title} - {include title|striptags|strip}{/ifset}</title>
 
     {block head}
-        <link rel="stylesheet" href="{$assetsPath}/style.css">
-        <link rel="stylesheet" href="{$assetsPath}/custom.css">
-        <link rel="shortcut icon" type="image/png" href="{$assetsPath}/assets/static/images/logo.png">
-        <style>
-            #loader {
-                transition: all 0.3s ease-in-out;
-                opacity: 1;
-                visibility: visible;
-                position: fixed;
-                height: 100vh;
-                width: 100%;
-                background: #fff;
-                z-index: 90000;
-            }
+		<!-- Icons -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-            #loader.fadeOut {
-                opacity: 0;
-                visibility: hidden;
-            }
+		<link rel="stylesheet" href="{$assetsPath}/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+		<link rel="stylesheet" href="{$assetsPath}/css/adminlte.min.css">
 
-            .spinner {
-                width: 40px;
-                height: 40px;
-                position: absolute;
-                top: calc(50% - 20px);
-                left: calc(50% - 20px);
-                background-color: #333;
-                border-radius: 100%;
-                -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
-                animation: sk-scaleout 1.0s infinite ease-in-out;
-            }
+		<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
-            @-webkit-keyframes sk-scaleout {
-                0% { -webkit-transform: scale(0) }
-                100% {
-                    -webkit-transform: scale(1.0);
-                    opacity: 0;
-                }
-            }
-
-            @keyframes sk-scaleout {
-                0% {
-                    -webkit-transform: scale(0);
-                    transform: scale(0);
-                } 100% {
-                      -webkit-transform: scale(1.0);
-                      transform: scale(1.0);
-                      opacity: 0;
-                  }
-            }
-            .checkbox label:before {
-                display: none !important;
-            }
-            input[type="checkbox"] {
-                opacity: 1 !important;
-            }
-        </style>
+        <link rel="shortcut icon" type="image/png" href="{$assetsPath}/favicon.png">
     {/block}
 </head>
-<body>
-{block loader}
-    <div id='loader'>
-        <div class="spinner"></div>
-    </div>
+<body class="hold-transition sidebar-mini layout-fixed">
 
-    <script>
-        window.addEventListener('load', function () {
-            setTimeout(function () {
-                document.getElementById('loader').classList.add('fadeOut');
-            }, 300);
-        });
-    </script>
-{/block}
+	<div class="wrapper">
+		<!-- Navbar -->
+		<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+			<!-- Left navbar links -->
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
+				</li>
+				<li class="nav-item d-none d-sm-inline-block">
+					<a href="{$basePath}/" class="nav-link">Zpět na web</a>
+				</li>
+				<li class="nav-item d-none d-sm-inline-block">
+					<a href="{$homepageLink}" class="nav-link">Domů</a>
+				</li>
+			</ul>
 
-<div>
-    {* Sidebar *}
-    <div n:block="sidebar" class="sidebar">
-        <div class="sidebar-inner">
-            <!-- ### $Sidebar Header ### -->
-            <div class="sidebar-logo">
-                <div class="peers ai-c fxw-nw">
-                    <div class="peer peer-greed">
-                        <a class="sidebar-link td-n" href="{$basePath}/">
-                            <div class="peers ai-c fxw-nw">
-                                <div class="peer">
-                                    <div class="logo">
-                                        <img src="{$assetsPath}/assets/static/images/logo.png" alt="">
-                                    </div>
-                                </div>
-                                <div class="peer peer-greed">
-                                    <h5 class="lh-1 mB-0 logo-text">Administrace</h5>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="peer">
-                        <div class="mobile-toggle sidebar-toggle">
-                            <a href="" class="td-n">
-                                <i class="ti-arrow-circle-left"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+			<!-- Right navbar links -->
+			<ul class="navbar-nav ml-auto">
+				<li class="nav-item">
+					<a n:href="Sign:out">Odhlásit se</a>
+				</li>
+			</ul>
+		</nav>
+		<!-- /.navbar -->
 
-            {control menu}
-        </div>
-    </div>
+		<!-- Main Sidebar Container -->
+		<aside class="main-sidebar sidebar-dark-primary elevation-4">
+			<!-- Brand Logo -->
+			<a href="{$homepageLink}" class="brand-link text-center">
+				<span class="brand-text">Administrace</span>
+			</a>
 
-    <div class="page-container">
-        {* Navbar *}
-        <div n:block="navbar" class="header navbar">
-            <div class="header-container">
-                <ul class="nav-left">
-                    <li>
-                        <a id="sidebar-toggle" class="sidebar-toggle" href="javascript:void(0);">
-                            <i class="ti-menu"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a n:href=":Front:Homepage:">
-                            <i class="ti-home"></i>
-                        </a>
-                    </li>
-                </ul>
-                <ul class="nav-right">
-                    <li class="dropdown">
-                        <a href="" class="dropdown-toggle no-after peers fxw-nw ai-c lh-1" data-toggle="dropdown">
-                            <div class="peer">
-                                <span n:if="$user->isLoggedIn()" class="fsz-sm c-grey-900">{$user->getName()}</span>
-                            </div>
-                        </a>
-                        <ul class="dropdown-menu fsz-sm">
-                            <li>
-                                <a n:href="Sign:out" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
-                                    <i class="ti-power-off mR-10"></i>
-                                    <span>Odhlásit</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
+			<!-- Sidebar -->
+			<div class="sidebar">
+				<div class="user-panel mt-3 pb-3 mb-3 d-flex">
+					<div class="image">
+						<img n:img="$user->getEntity()->avatar, avatar" class="img-circle elevation-2" alt="User Image">
+					</div>
+					<div class="info">
+						<a class="d-block">{$user->getName()}</a>
+					</div>
+				</div>
 
-        <main class="main-content bgc-grey-100">
-            <div id="mainContent">
-                <div class="col-md-12">
-                    <div n:foreach="$flashes as $flash"
-                            n:class="alert, $flash->type === error ? 'alert-danger' : 'alert-' . $flash->type ">
-                        {_$flash->message}
-                    </div>
-                </div>
-                <div class="row gap-20 masonry pos-r">
-                    <div class="masonry-sizer col-md-6"></div>
-                    {include content}
-                </div>
-            </div>
-        </main>
-    </div>
-</div>
+				{control menu}
+			</div>
+		</aside>
 
-{block scripts}
-    <script>
-        window.assetsPath = {$assetsPath} + '/';
-    </script>
-    <script src="{$assetsPath}/vendor.js"></script>
-    <script src="{$assetsPath}/bundle.js"></script>
-{/block}
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+
+			<section class="content-header">
+
+			</section>
+
+			<!-- Main content -->
+			<section class="content">
+
+				<div class="container-fluid">
+					{include #content}
+				</div>
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+	</div>
+
+	{block scripts}
+		<script src="{$assetsPath}/plugins/jquery/jquery.min.js"></script>
+		<script src="{$assetsPath}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<script src="{$assetsPath}/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+		<script src="{$assetsPath}/js/adminlte.min.js"></script>
+	{/block}
 
 </body>
