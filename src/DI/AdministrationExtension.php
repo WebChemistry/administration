@@ -11,12 +11,10 @@ use WebChemistry\Administration\Components\Entities\MenuChild;
 use WebChemistry\Administration\Components\MenuComponent;
 use WebChemistry\Administration\Providers\CdnLinkProvider;
 use WebChemistry\Administration\Providers\HomepageLinkProvider;
-use WebChemistry\Macros\DI\EmbedMacroExtension;
-use WebChemistry\Macros\EmbedAliases;
 
 final class AdministrationExtension extends CompilerExtension {
 
-	private const VERSION = '1.0.1';
+	private const VERSION = '1.0.3';
 
 	public function getConfigSchema(): Schema {
 		return Expect::structure([
@@ -33,7 +31,7 @@ final class AdministrationExtension extends CompilerExtension {
 			'links' => Expect::structure([
 				'homepage' => Expect::string('Homepage:'),
 			]),
-			'version' => Expect::string()
+			'version' => Expect::string(self::VERSION)
 		]);
 	}
 
@@ -53,18 +51,6 @@ final class AdministrationExtension extends CompilerExtension {
 		if ($config->menu) {
 			$this->createMenu((array) $config->menu);
 		}
-	}
-
-	public function beforeCompile(): void {
-		$extensions = $this->compiler->getExtensions(EmbedMacroExtension::class);
-		if (!$extensions) {
-			return;
-		}
-
-		$builder = $this->getContainerBuilder();
-
-		$builder->getDefinitionByType(EmbedAliases::class)
-			->addSetup('addAlias', ['admin', __DIR__ . '/../Presenters/templates/blocks.latte']);
 	}
 
 	private function createChildren(array $items): array {
