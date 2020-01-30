@@ -14,7 +14,7 @@ use WebChemistry\Administration\Providers\HomepageLinkProvider;
 
 final class AdministrationExtension extends CompilerExtension {
 
-	private const VERSION = '1.0.3';
+	private const VERSION = '1.0.4';
 
 	public function getConfigSchema(): Schema {
 		return Expect::structure([
