@@ -15,6 +15,6 @@
 		"latte/latte": "^2.6"
 	},
 	"archive": {
-		"exclude": ["assets"]
+		"exclude": ["/assets"]
 	}
 }
