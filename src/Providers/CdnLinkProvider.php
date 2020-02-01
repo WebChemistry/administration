@@ -4,11 +4,15 @@ namespace WebChemistry\Administration\Providers;
 
 use Nette\SmartObject;
 
+/**
+ * @internal
+ */
 final class CdnLinkProvider {
 
 	use SmartObject;
 
-	public const VERSION = '1.0.1';
+	/** @var string */
+	public const VERSION = '1.0.6';
 
 	/** @var string */
 	private $version;

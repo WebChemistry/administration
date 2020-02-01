@@ -3,15 +3,10 @@
 namespace WebChemistry\Administration;
 
 use Nette\Application\ForbiddenRequestException;
-use WebChemistry\Administration\Authorizator\IAdministratorAuthorizator;
 use WebChemistry\Administration\Components\MenuComponent;
 use WebChemistry\Administration\Providers\CdnLinkProvider;
-use WebChemistry\Administration\Providers\HomepageLinkProvider;
 
 trait TAdminPresenter {
-
-	/** @var IAdministratorAuthorizator */
-	private $administratorAuthorizator;
 
 	/** @var CdnLinkProvider */
 	private $linkProvider;
@@ -19,16 +14,14 @@ trait TAdminPresenter {
 	/** @var MenuComponent */
 	private $menuComponent;
 
-	/** @var HomepageLinkProvider */
-	private $homepageLinkProvider;
+	/** @var IAdministrationConfiguration */
+	private $configuration;
 
-	final public function injectTAdminPresenter(IAdministratorAuthorizator $administratorAuthorizator,
-												CdnLinkProvider $linkProvider, MenuComponent $menuComponent,
-												HomepageLinkProvider $homepageLinkProvider) {
-		$this->administratorAuthorizator = $administratorAuthorizator;
+	final public function injectTAdminPresenter(CdnLinkProvider $linkProvider, MenuComponent $menuComponent,
+												IAdministrationConfiguration $configuration) {
 		$this->linkProvider = $linkProvider;
 		$this->menuComponent = $menuComponent;
-		$this->homepageLinkProvider = $homepageLinkProvider;
+		$this->configuration = $configuration;
 	}
 
 	protected function startup() {
@@ -38,7 +31,7 @@ trait TAdminPresenter {
 			$this->redirect('Sign:in', ['backlink' => $this->link('this')]);
 		}
 
-		if (!$this->administratorAuthorizator->isAdministrator($this->getUser())) {
+		if (!$this->configuration->isCurrentUserAdministrator()) {
 			throw new ForbiddenRequestException('User is not an administrator');
 		}
 	}
@@ -60,8 +53,9 @@ trait TAdminPresenter {
 		$template = $this->getTemplate();
 
 		$template->parentLayout = $this->getBaseLayout();
-		$template->homepageLink = $this->link($this->homepageLinkProvider->getLink());
+		$template->homepageLink = $this->link($this->configuration->getHomepageDestination());
 		$template->assetsPath = $this->linkProvider->getAssetsLink();
+		$template->avatar = $this->configuration->getAvatar();
 	}
 
 	protected function createComponentMenu(): MenuComponent {

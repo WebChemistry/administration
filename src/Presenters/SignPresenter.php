@@ -3,20 +3,20 @@
 namespace WebChemistry\Administration\Presenters;
 
 use WebChemistry\Administration\AdminPresenter;
-use WebChemistry\Administration\Providers\HomepageLinkProvider;
+use WebChemistry\Administration\IAdministrationConfiguration;
 use WebChemistry\NetteInterfaces\Factories\ISignInFormFactory;
 
 class SignPresenter extends AdminPresenter {
 
-	/** @var HomepageLinkProvider @inject */
-	public $homepageLinkProvider;
+	/** @var IAdministrationConfiguration @inject */
+	public $administrationConfiguration;
 
 	/** @var ISignInFormFactory @inject */
 	public $signInFormFactory;
 
 	public function actionIn(?string $backlink): void {
 		if ($this->getUser()->isLoggedIn()) {
-			$this->redirect($this->homepageLinkProvider->getLink());
+			$this->redirect($this->administrationConfiguration->getHomepageDestination());
 		}
 
 		$template = $this->getTemplate();
@@ -41,7 +41,7 @@ class SignPresenter extends AdminPresenter {
 				$this->redirectUrl($this->getParameter('backlink'));
 			}
 
-			$this->redirect($this->homepageLinkProvider->getLink());
+			$this->redirect($this->administrationConfiguration->getHomepageDestination());
 		};
 
 		return $form;

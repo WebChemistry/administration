@@ -57,7 +57,7 @@
 			<div class="sidebar">
 				<div class="user-panel mt-3 pb-3 mb-3 d-flex">
 					<div class="image">
-						<img n:img="$user->getEntity()->avatar, avatar" class="img-circle elevation-2" alt="User Image">
+						<img n:if="$avatar" src="{$avatar}" class="img-circle elevation-2" alt="User Image">
 					</div>
 					<div class="info">
 						<a class="d-block">{$user->getName()}</a>

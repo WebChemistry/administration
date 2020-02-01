@@ -2,19 +2,19 @@
 
 namespace WebChemistry\Administration\DI;
 
+use LogicException;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions\Statement;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
+use WebChemistry\Administration\AdministrationConfiguration;
 use WebChemistry\Administration\Components\Entities\Menu;
 use WebChemistry\Administration\Components\Entities\MenuChild;
 use WebChemistry\Administration\Components\MenuComponent;
+use WebChemistry\Administration\IAdministrationConfiguration;
 use WebChemistry\Administration\Providers\CdnLinkProvider;
-use WebChemistry\Administration\Providers\HomepageLinkProvider;
 
 final class AdministrationExtension extends CompilerExtension {
-
-	private const VERSION = '1.0.4';
 
 	public function getConfigSchema(): Schema {
 		return Expect::structure([
@@ -26,12 +26,9 @@ final class AdministrationExtension extends CompilerExtension {
 					'name' => Expect::string()->required(),
 					'icon' => Expect::string(),
 					'url' => Expect::type('array|string'),
-				]))
+				])),
 			])),
-			'links' => Expect::structure([
-				'homepage' => Expect::string('Homepage:'),
-			]),
-			'version' => Expect::string(self::VERSION)
+			'version' => Expect::string(),
 		]);
 	}
 
@@ -42,14 +39,20 @@ final class AdministrationExtension extends CompilerExtension {
 		$builder->addDefinition($this->prefix('menu'))
 			->setType(MenuComponent::class);
 
-		$builder->addDefinition($this->prefix('homepageLinkProvider'))
-			->setFactory(HomepageLinkProvider::class, [$config->links->homepage]);
-
 		$builder->addDefinition($this->prefix('cdnLinkProvider'))
 			->setFactory(CdnLinkProvider::class, [$config->version]);
 
 		if ($config->menu) {
 			$this->createMenu((array) $config->menu);
+		}
+	}
+
+	public function beforeCompile(): void {
+		$builder = $this->getContainerBuilder();
+
+		if (!$builder->getByType(IAdministrationConfiguration::class)) {
+			$builder->addDefinition($this->prefix('administrationConfiguration'))
+				->setFactory(AdministrationConfiguration::class);
 		}
 	}
 
