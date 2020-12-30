@@ -10,9 +10,6 @@ use WebChemistry\Administration\Providers\HomepageLinkProvider;
 
 trait TAdminPresenter {
 
-	/** @var IAdministratorAuthorizator */
-	private $administratorAuthorizator;
-
 	/** @var CdnLinkProvider */
 	private $linkProvider;
 
@@ -22,10 +19,17 @@ trait TAdminPresenter {
 	/** @var HomepageLinkProvider */
 	private $homepageLinkProvider;
 
-	final public function injectTAdminPresenter(IAdministratorAuthorizator $administratorAuthorizator,
-												CdnLinkProvider $linkProvider, MenuComponent $menuComponent,
-												HomepageLinkProvider $homepageLinkProvider) {
-		$this->administratorAuthorizator = $administratorAuthorizator;
+	/** @var IAdministrationConfiguration */
+	private $configuration;
+
+	final public function injectTAdminPresenter(
+		IAdministrationConfiguration $configuration,
+		CdnLinkProvider $linkProvider,
+		MenuComponent $menuComponent,
+		HomepageLinkProvider $homepageLinkProvider
+	)
+	{
+		$this->configuration = $configuration;
 		$this->linkProvider = $linkProvider;
 		$this->menuComponent = $menuComponent;
 		$this->homepageLinkProvider = $homepageLinkProvider;
@@ -38,7 +42,7 @@ trait TAdminPresenter {
 			$this->redirect('Sign:in', ['backlink' => $this->link('this')]);
 		}
 
-		if (!$this->administratorAuthorizator->isAdministrator($this->getUser())) {
+		if (!$this->configuration->isCurrentUserAdministrator()) {
 			throw new ForbiddenRequestException('User is not an administrator');
 		}
 	}
