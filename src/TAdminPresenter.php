@@ -42,7 +42,7 @@ trait TAdminPresenter {
 			$this->redirect('Sign:in', ['backlink' => $this->link('this')]);
 		}
 
-		if (!$this->configuration->isCurrentUserAdministrator()) {
+		if (!$this->configuration->isCurrentUserAdministrator() && !$this->isLinkCurrent('Sign:*')) {
 			throw new ForbiddenRequestException('User is not an administrator');
 		}
 	}
